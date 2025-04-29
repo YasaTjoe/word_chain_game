@@ -1,3 +1,16 @@
+.cascadia-mono-regular {
+    font-family: "Cascadia Mono", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+  }
+
+.cal-sans-regular {
+    font-family: "Cal Sans", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+  }
+  
 body {
     font-family: Arial, sans-serif;
     text-align: center;
@@ -111,3 +124,75 @@ h1 {
     color: #333333;
     background-color: #ffffff;
 }
+
+#welcome-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 90vh;
+    text-align: center;
+}
+
+
+#start-btn {
+    background-color: #ff5722;
+    color: white;
+    font-size: 22px;
+    font-weight: bold;
+    padding: 15px 40px;
+    border: none;
+    border-radius: 12px;
+    margin-top: 30px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-family: "Cal Sans";
+}
+
+#start-btn:hover {
+    background-color: #e64a19;
+}
+
+.subtitle {
+    font-size: 20px;
+    color: #0a0a0a;
+    margin-top: 10px;
+    font-family: "Cal Sans";
+}
+
+.logo {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+    margin-bottom: 20px;
+  }
+  
+  .title_tile {
+    width: 60px;
+    height: 60px;
+    background-color: white;
+    border: 2px solid black;
+    margin: 5px;
+    font-size: 32px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: jump 0.8s forwards;
+    font-family: "Cascadia Mono", sans-serif; /* 👈 Add this line */
+  }
+  
+  
+  .title_tile:nth-child(1) { animation-delay: 0s; background-color: #f0ff00; } /* green */
+  .title_tile:nth-child(2) { animation-delay: 0.2s; background-color: #ffce00; } /* yellow */
+  .title_tile:nth-child(3) { animation-delay: 0.4s; background-color: #ff9a00; } /* gray */
+  .title_tile:nth-child(4) { animation-delay: 0.6s; background-color: #ff5a00; } /* blue */
+  .title_tile:nth-child(5) { animation-delay: 0.8s; background-color: #ff0000; } /* orange */
+  
+  @keyframes jump {
+    0%   { transform: translateY(0); }
+    30%  { transform: translateY(-20px); }
+    50%  { transform: translateY(0); }
+    100% { transform: translateY(0); }
+  }
+  

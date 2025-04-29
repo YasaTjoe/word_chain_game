@@ -170,8 +170,7 @@ function submitGuess() {
     const fullGuess = expectedWord.slice(0, hintLetters[currentStep]) + currentGuess;
 
     if (fullGuess.length !== expectedLength) {
-        document.getElementById("message").textContent = `Guess must be ${expectedLength} letters!`;
-        return;
+        return; // No message anymore if wrong length
     }
 
     guessCount++;
@@ -182,14 +181,12 @@ function submitGuess() {
         currentStep++;
         currentGuess = "";
         hintLetters[currentStep] = 1;
-        document.getElementById("message").textContent = `Correct! Guesses: ${guessCount}`;
         if (currentStep === chain.length) {
-            document.getElementById("message").textContent = `You won in ${guessCount} guesses! Chain: ${chain.join(" -> ")}`;
+            // No final win message either
         }
         row.querySelectorAll(".tile").forEach(tile => tile.classList.add("flip"));
         updateDisplay();
     } else {
-        document.getElementById("message").textContent = `Wrong, try again! Guesses: ${guessCount}`;
         currentGuess = "";
         hintLetters[currentStep] = Math.min(hintLetters[currentStep] + 1, expectedWord.length);
         row.querySelectorAll(".tile").forEach(tile => tile.classList.add("flip"));
@@ -199,6 +196,7 @@ function submitGuess() {
         }, 300);
     }
 }
+
 
 function showHint() {
     const expectedWord = chain[currentStep];

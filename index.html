@@ -5,12 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Link-O</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cal+Sans&family=Cascadia+Mono:ital,wght@0,242;1,242&display=swap" rel="stylesheet">
 </head>
 <body>
     <div id="welcome-page">
-        <h1>Welcome to Link-O</h1>
-        <button id="start-btn" onclick="startGame()">Start</button>
-    </div>
+        <div class="logo">
+            <div class="title_tile">L</div>
+            <div class="title_tile">I</div>
+            <div class="title_tile">N</div>
+            <div class="title_tile">K</div>
+            <div class="title_tile">O</div>
+          </div>          
+        <p class="subtitle">Connect the words. Train your mind!</p>
+        <button id="start-btn" onclick="startGame()">Play Now!</button>
+    </div>    
+
     <div id="game-container" style="display: none;">
         <h1>Link-O</h1>
         <p>Guess the word chain! Each word connects to the previous one.</p>
@@ -51,10 +62,9 @@
                 <button data-key="backspace">⌫</button>
             </div>
         </div>
-        <p id="message"></p>
         <div id="past-guesses"></div>
-        <button id="restart-btn" onclick="restartGame()">Restart</button>
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>
