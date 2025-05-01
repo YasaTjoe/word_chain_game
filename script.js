@@ -82,6 +82,45 @@ async function initGame() {
         hintLetters = Array(chain.length).fill(1);
         updateDisplay();
         setupKeyboard();
+        // Mobile keyboard support
+        const mobileInput = document.getElementById("mobile-input");
+        if (window.innerWidth <= 768 && mobileInput) {
+            console.log("Mobile device detected — enabling native keyboard");
+            mobileInput.style.opacity = 0;
+            mobileInput.focus();
+
+            // Re-focus input if user taps anywhere
+            document.body.addEventListener("click", () => mobileInput.focus());
+
+            // Handle typing from mobile input
+            mobileInput.addEventListener("input", (e) => {
+                const value = e.target.value.toLowerCase();
+                if (!value) return;
+
+                const char = value[value.length - 1];
+                if (/^[a-z]$/.test(char)) {
+                    handleKeyPress(char);
+                }
+                e.target.value = "";
+            });
+            mobileInput.addEventListener("keydown", (e) => {
+                if (e.key === "Enter") {
+                  handleKeyPress("enter");
+                }
+              });
+              
+            mobileInput.addEventListener("keydown", (e) => {
+                if (e.key === "Backspace") handleKeyPress("backspace");
+                else if (e.key === "Enter") handleKeyPress("enter");
+            });
+
+            // Hide the custom on-screen keyboard on small screens
+            const keyboard = document.getElementById("keyboard");
+            if (keyboard) {
+                keyboard.style.display = "none";
+            }
+        }
+
     } catch (error) {
         console.error('Error initializing game:', error.message);
         document.getElementById("message").textContent = `Error: ${error.message}. Run a local server (e.g., Live Server) if testing locally, or ensure chains.json is in the correct server folder (/wordchain or root) with 644 permissions.`;
