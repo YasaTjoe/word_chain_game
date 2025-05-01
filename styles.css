@@ -28,6 +28,14 @@ h1 {
     align-items: center;
     margin: 20px 0;
 }
+.fade-in {
+    animation: fadeIn 0.5s ease-in forwards;
+    opacity: 0;
+  }
+  
+  @keyframes fadeIn {
+    to { opacity: 1; }
+  }  
 .row {
     display: flex;
 }
@@ -45,6 +53,7 @@ h1 {
     transition: transform 0.2s;
     background-color: #ffffff;
     color: #333333;
+    font-family: "Cal Sans";
 }
 .tile.revealed {
     background-color: #6aaa64;
@@ -62,7 +71,13 @@ h1 {
     border-color: #787c7e;
 }
 .tile.flip {
-    transform: rotateX(360deg);
+    animation: flipX 0.3s ease-in-out;
+  }
+  
+@keyframes flipX {
+    0%   { transform: rotateX(0deg); }
+    50%  { transform: rotateX(180deg); }
+    100% { transform: rotateX(360deg); }
 }
 #controls {
     margin: 10px 0;
@@ -183,11 +198,11 @@ h1 {
   }
   
   
-  .title_tile:nth-child(1) { animation-delay: 0s; background-color: #f0ff00; } /* green */
-  .title_tile:nth-child(2) { animation-delay: 0.2s; background-color: #ffce00; } /* yellow */
-  .title_tile:nth-child(3) { animation-delay: 0.4s; background-color: #ff9a00; } /* gray */
-  .title_tile:nth-child(4) { animation-delay: 0.6s; background-color: #ff5a00; } /* blue */
-  .title_tile:nth-child(5) { animation-delay: 0.8s; background-color: #ff0000; } /* orange */
+  .title_tile:nth-child(1) { animation-delay: 0s; background-color: #f0ff00; } 
+  .title_tile:nth-child(2) { animation-delay: 0.2s; background-color: #ffce00; } 
+  .title_tile:nth-child(3) { animation-delay: 0.4s; background-color: #ff9a00; } 
+  .title_tile:nth-child(4) { animation-delay: 0.6s; background-color: #ff5a00; } 
+  .title_tile:nth-child(5) { animation-delay: 0.8s; background-color: #ff0000; }
   
   @keyframes jump {
     0%   { transform: translateY(0); }
@@ -195,4 +210,104 @@ h1 {
     50%  { transform: translateY(0); }
     100% { transform: translateY(0); }
   }
+  
+  #transition-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7); /* semi-transparent background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.popup-content {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+    max-width: 400px;
+    width: 80%;
+    animation: popup-fade 0.5s ease-out;
+}
+
+#continue-btn {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+#continue-btn:hover {
+    background-color: #0056b3;
+}
+
+@keyframes popup-fade {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+#logo-img {
+    max-height: 80px;
+    margin-bottom: 10px;
+}
+ .tile.initial {
+    background-color: #787c7e; /* gray */
+    color: white;
+    border-color: #787c7e;
+ }
+#win-popup {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  #win-popup .popup-content {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+}
+@keyframes shake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    50% { transform: translateX(5px); }
+    75% { transform: translateX(-5px); }
+    100% { transform: translateX(0); }
+  }
+  
+  .shake {
+    animation: shake 0.5s ease;
+  }
+.tile.correct {
+    background-color: #6aaa64; /* green like Wordle */
+    border-color: #6aaa64;
+    color: white;
+}
+  
+.logo .logo-tile {
+    background-color: #787c7e;
+    border: 2px solid black;
+    color: black;
+    font-family: "Cascadia Mono", sans-serif;
+    animation: none !important; /* Disable flip/shake */
+}
+  
+.logo .logo-tile:nth-child(1) { background-color: #f0ff00; }  /* green */
+.logo .logo-tile:nth-child(2) { background-color: #ffce00; }  /* yellow */
+.logo .logo-tile:nth-child(3) { background-color: #ff9a00; }  /* gray */
+.logo .logo-tile:nth-child(4) { background-color: #ff5a00; }  /* blue */
+.logo .logo-tile:nth-child(5) { background-color: #ff0000; }  /* orange */
   

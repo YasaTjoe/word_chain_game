@@ -21,9 +21,26 @@
         <p class="subtitle">Connect the words. Train your mind!</p>
         <button id="start-btn" onclick="startGame()">Play Now!</button>
     </div>    
+    <!-- Transition Popup -->
+    <div id="transition-popup" style="display: none;">
+        <div class="popup-content">
+        <h2 id="ad-title">Get Ready</h2>
+        <p id="countdown-text">3</p>
+        <!-- Optional: place ad image, iframe, or text below -->
+    
+        <button id="continue-btn" style="display: none;">Continue to Game</button>
+        </div>
+    </div>
+  
 
     <div id="game-container" style="display: none;">
-        <h1>Link-O</h1>
+        <div class="logo">
+            <div class="tile logo-tile">L</div>
+            <div class="tile logo-tile">I</div>
+            <div class="tile logo-tile">N</div>
+            <div class="tile logo-tile">K</div>
+            <div class="tile logo-tile">O</div>
+          </div>                  
         <p>Guess the word chain! Each word connects to the previous one.</p>
         <div id="game-board"></div>
         <div id="keyboard">
@@ -64,7 +81,14 @@
         </div>
         <div id="past-guesses"></div>
     </div>
-
+    <div id="win-popup" style="display: none;">
+        <div class="popup-content">
+          <h2>🎉 Congratulations!</h2>
+          <p>You completed the chain in <span id="final-count"></span> guesses!</p>
+          <button onclick="location.reload()">Play Again</button>
+        </div>
+      </div>
+      
     <script src="script.js"></script>
 </body>
 </html>

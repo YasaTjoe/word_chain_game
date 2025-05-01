@@ -6,35 +6,38 @@ let guessCount = 0;
 let pastGuesses = [];
 let currentGuess = "";
 let hintLetters = [];
-const hints = {
-    "flower": "Think of a plant",
-    "power": "Think of energy",
-    "line": "Think of a connection",
-    "dance": "Think of a movement",
-    "floor": "Think of a surface",
-    "plan": "Think of a strategy",
-    "light": "Think of brightness",
-    "house": "Think of a home",
-    "boat": "Think of a vessel",
-    "yard": "Think of a garden",
-    "stick": "Think of a branch",
-    "figure": "Think of a shape",
-    "fish": "Think of a swimmer",
-    "bowl": "Think of a dish",
-    "game": "Think of a contest",
-    "book": "Think of a read",
-    "shelf": "Think of storage",
-    "guest": "Think of a visitor",
-    "room": "Think of a space",
-    "mate": "Think of a friend",
-    "ship": "Think of a vessel"
-};
 
 function startGame() {
     document.getElementById("welcome-page").style.display = "none";
-    document.getElementById("game-container").style.display = "block";
-    initGame();
+    document.getElementById("transition-popup").style.display = "flex";
+
+    const countdownText = document.getElementById("countdown-text");
+    const continueBtn = document.getElementById("continue-btn");
+
+    let count = 3;
+    countdownText.textContent = count;
+
+    const countdownInterval = setInterval(() => {
+        count--;
+        if (count > 0) {
+            countdownText.textContent = count;
+        } else {
+            clearInterval(countdownInterval);
+            countdownText.style.display = "none";
+            continueBtn.style.display = "inline-block";
+        }
+    }, 1000); // countdown every second
 }
+
+document.getElementById("continue-btn").addEventListener("click", () => {
+    const game = document.getElementById("game-container");
+    document.getElementById("transition-popup").style.display = "none";
+    game.style.display = "block";
+    game.classList.add("fade-in");
+    initGame();
+});
+
+
 
 async function initGame() {
     try {
@@ -103,11 +106,13 @@ function updateDisplay() {
             const tile = document.createElement("div");
             tile.classList.add("tile");
             tile.textContent = displayText[i] || "";
-            if (isGuessed) {
+            if (index === 0) {
+                tile.classList.add("initial");
+            } else if (isGuessed) {
                 tile.classList.add("revealed");
             } else {
                 tile.classList.add("hint");
-            }
+            }            
             row.appendChild(tile);
         }
         board.appendChild(row);
@@ -170,32 +175,52 @@ function submitGuess() {
     const fullGuess = expectedWord.slice(0, hintLetters[currentStep]) + currentGuess;
 
     if (fullGuess.length !== expectedLength) {
-        return; // No message anymore if wrong length
+        return; // Don't accept partial guesses
     }
 
     guessCount++;
-    pastGuesses.push(fullGuess);
     const row = document.querySelectorAll(".row")[currentStep];
+
     if (fullGuess === expectedWord) {
         guesses[currentStep] = fullGuess;
         currentStep++;
         currentGuess = "";
         hintLetters[currentStep] = 1;
-        if (currentStep === chain.length) {
-            // No final win message either
-        }
-        row.querySelectorAll(".tile").forEach(tile => tile.classList.add("flip"));
-        updateDisplay();
+        row.querySelectorAll(".tile").forEach(tile => {
+            tile.classList.add("correct");
+        });        
+
+        // Apply flip animation after a short delay to ensure it's seen
+        setTimeout(() => {
+            row.querySelectorAll(".tile").forEach(tile => {
+                tile.classList.add("flip");
+            });
+        }, 10);
+
+        // Wait for flip animation before updating display and checking for win
+        setTimeout(() => {
+            updateDisplay();
+            if (currentStep === chain.length) {
+                document.getElementById("final-count").textContent = guessCount;
+                document.getElementById("win-popup").style.display = "flex";
+            }
+        }, 600); // match your flip duration (0.6s)
+
     } else {
         currentGuess = "";
         hintLetters[currentStep] = Math.min(hintLetters[currentStep] + 1, expectedWord.length);
-        row.querySelectorAll(".tile").forEach(tile => tile.classList.add("flip"));
+
+        // Apply shake animation to the current row
+        row.classList.add("shake");
+
         setTimeout(() => {
+            row.classList.remove("shake");
             updateInput();
             updateDisplay();
-        }, 300);
+        }, 500); // match shake animation duration
     }
 }
+
 
 
 function showHint() {
