@@ -1,4 +1,70 @@
 // Game state
+function resetGameState() {
+    chain = [];
+    currentStep = 1;
+    guesses = [];
+    guessCount = 0;
+    pastGuesses = [];
+    currentGuess = "";
+    hintLetters = [];
+    document.getElementById("message").textContent = "";
+    document.getElementById("game-board").innerHTML = "";
+    document.getElementById("past-guesses").innerHTML = "";
+  }
+  
+window.startGrindAfterDaily = function () {
+    document.getElementById("win-popup").style.display = "none";
+    startGame("grind");
+  };
+  
+
+  window.startNextGrindLevel = function () {
+    grindLevel++;
+    localStorage.setItem("grindLevel", grindLevel);
+    document.getElementById("win-popup").style.display = "none";
+    resetGameState();
+    gameMode = "grind";
+    initGame();
+  };
+  
+document.addEventListener("DOMContentLoaded", () => {
+    const playBtn = document.getElementById("play-btn");
+    const grindBtn = document.getElementById("grind-btn");
+  
+    if (playBtn) {
+        playBtn.addEventListener("click", () => {
+            const today = new Date().toISOString().split("T")[0];
+            const lastPlayed = localStorage.getItem("lastPlayedDate");
+          
+            if (lastPlayed === today) {
+              alert("You've already played today's daily! Come back tomorrow.");
+              return;
+            }
+          
+            startGame("daily");
+          });          
+    } else {
+      console.warn("Play button not found");
+    }
+  
+    if (grindBtn) {
+      grindBtn.addEventListener("click", () => startGame("grind"));
+    } else {
+      console.warn("Grind button not found");
+    }
+  });
+  
+function keyboardHandler(e) {
+    if (e.key === "Enter") {
+      submitGuess();
+    } else if (e.key === "Backspace") {
+      currentGuess = currentGuess.slice(0, -1);
+    } else if (/^[a-zA-Z]$/.test(e.key) && currentGuess.length < chain[currentStep].length - hintLetters[currentStep]) {
+      currentGuess += e.key.toLowerCase();
+    }
+    updateInput();
+}
+  
 let chain = [];
 let currentStep = 1;
 let guesses = [];
@@ -6,8 +72,20 @@ let guessCount = 0;
 let pastGuesses = [];
 let currentGuess = "";
 let hintLetters = [];
+let gameMode = "daily";       // "daily" or "grind"
+let grindLevel = parseInt(localStorage.getItem("grindLevel")) || 1;
 
-function startGame() {
+
+function startGame(mode) {
+    gameMode = mode;
+    const subtitle = document.getElementById("subtitle-text");
+
+    if (mode === "grind") {
+    subtitle.textContent = `Grind Level: ${grindLevel}! Good Luck!`;
+    } else {
+    subtitle.textContent = "Guess the word chain! Each word connects to the previous one.";
+    }
+
     document.getElementById("welcome-page").style.display = "none";
     document.getElementById("transition-popup").style.display = "flex";
 
@@ -15,6 +93,8 @@ function startGame() {
     const continueBtn = document.getElementById("continue-btn");
 
     let count = 3;
+    countdownText.style.display = "block";
+    continueBtn.style.display = "none";
     countdownText.textContent = count;
 
     const countdownInterval = setInterval(() => {
@@ -26,8 +106,9 @@ function startGame() {
             countdownText.style.display = "none";
             continueBtn.style.display = "inline-block";
         }
-    }, 1000); // countdown every second
+    }, 1000);
 }
+
 
 document.getElementById("continue-btn").addEventListener("click", () => {
     const game = document.getElementById("game-container");
@@ -36,52 +117,37 @@ document.getElementById("continue-btn").addEventListener("click", () => {
     game.classList.add("fade-in");
     initGame();
 });
-
-
+  
 
 async function initGame() {
     try {
-        console.log('Fetching chains.json...');
-        const fetchPaths = ['./chains.json', '/wordchain/chains.json', '/chains.json'];
-        let response;
-        for (const path of fetchPaths) {
-            console.log(`Attempting to fetch: ${path}`);
-            response = await fetch(path, { cache: 'no-store' });
-            if (response.ok) {
-                console.log(`Successfully fetched: ${path}`);
-                break;
-            }
-            console.log(`Failed to fetch ${path}: ${response.status} ${response.statusText}`);
-        }
-        if (!response.ok) {
-            console.warn('All fetch attempts failed. Using fallback chain.');
-            chain = ["tree", "house", "guest", "room", "mate", "ship", "yard"];
-            document.getElementById("message").textContent = "Warning: Could not load chains.json. Using default chain for today.";
-        } else {
-            const chains = await response.json();
-            if (!Array.isArray(chains)) {
-                throw new Error('chains.json is not a valid array');
-            }
-            const today = new Date().toISOString().split('T')[0];
-            console.log('Today\'s date:', today);
-            console.log('Chains loaded:', chains);
+        let fetchPath = gameMode === "daily" ? "./daily_chains.json" : "./grind_chains.json";
+        console.log(`Fetching ${fetchPath}...`);
+
+        const response = await fetch(fetchPath, { cache: "no-store" });
+        if (!response.ok) throw new Error(`Failed to fetch ${fetchPath}`);
+
+        const chains = await response.json();
+        if (!Array.isArray(chains)) throw new Error("Invalid JSON format");
+
+        if (gameMode === "daily") {
+            const today = new Date().toISOString().split("T")[0];
             const todayChain = chains.find(c => c.date === today);
-            if (!todayChain) {
-                console.warn('No chain found for today:', today);
-                document.getElementById("message").textContent = "No chain available for today. Please check back tomorrow.";
-                document.getElementById("game-board").innerHTML = "<p>Game unavailable.</p>";
-                return;
-            }
-            console.log('Selected chain:', todayChain.chain);
+            if (!todayChain) throw new Error("No daily chain found for today");
             chain = todayChain.chain;
-            if (!Array.isArray(chain) || chain.length === 0) {
-                throw new Error('Invalid chain data in chains.json');
-            }
+        } else {
+            const levelChain = chains.find(c => c.level === grindLevel);
+            console.log("Available chains:", chains.map(c => c.level));  // 👈 See what levels are loaded
+            console.log("Trying to load level:", grindLevel);  
+            if (!levelChain) throw new Error(`No grind chain found for level ${grindLevel}`);
+            chain = levelChain.chain;
         }
+
         guesses = Array(chain.length).fill(null);
         hintLetters = Array(chain.length).fill(1);
         updateDisplay();
         setupKeyboard();
+
         // Mobile keyboard support
         const mobileInput = document.getElementById("mobile-input");
         if (window.innerWidth <= 768 && mobileInput) {
@@ -89,44 +155,32 @@ async function initGame() {
             mobileInput.style.opacity = 0;
             mobileInput.focus();
 
-            // Re-focus input if user taps anywhere
             document.body.addEventListener("click", () => mobileInput.focus());
 
-            // Handle typing from mobile input
             mobileInput.addEventListener("input", (e) => {
                 const value = e.target.value.toLowerCase();
                 if (!value) return;
-
                 const char = value[value.length - 1];
-                if (/^[a-z]$/.test(char)) {
-                    handleKeyPress(char);
-                }
+                if (/^[a-z]$/.test(char)) handleKeyPress(char);
                 e.target.value = "";
             });
+
             mobileInput.addEventListener("keydown", (e) => {
-                if (e.key === "Enter") {
-                  handleKeyPress("enter");
-                }
-              });
-              
-            mobileInput.addEventListener("keydown", (e) => {
+                if (e.key === "Enter") handleKeyPress("enter");
                 if (e.key === "Backspace") handleKeyPress("backspace");
-                else if (e.key === "Enter") handleKeyPress("enter");
             });
 
-            // Hide the custom on-screen keyboard on small screens
             const keyboard = document.getElementById("keyboard");
-            if (keyboard) {
-                keyboard.style.display = "none";
-            }
+            if (keyboard) keyboard.style.display = "none";
         }
-
     } catch (error) {
         console.error('Error initializing game:', error.message);
-        document.getElementById("message").textContent = `Error: ${error.message}. Run a local server (e.g., Live Server) if testing locally, or ensure chains.json is in the correct server folder (/wordchain or root) with 644 permissions.`;
+        document.getElementById("message").textContent =
+            `Error: ${error.message}. Make sure the JSON files are available and hosted correctly.`;
         document.getElementById("game-board").innerHTML = "<p>Game unavailable.</p>";
     }
 }
+
 
 function updateDisplay() {
     if (!chain.length) {
@@ -183,16 +237,8 @@ function setupKeyboard() {
             updateInput();
         });
     });
-    document.addEventListener("keydown", (e) => {
-        if (e.key === "Enter") {
-            submitGuess();
-        } else if (e.key === "Backspace") {
-            currentGuess = currentGuess.slice(0, -1);
-        } else if (/^[a-zA-Z]$/.test(e.key) && currentGuess.length < chain[currentStep].length - hintLetters[currentStep]) {
-            currentGuess += e.key.toLowerCase();
-        }
-        updateInput();
-    });
+    document.removeEventListener("keydown", keyboardHandler); // Ensure it's not added twice
+    document.addEventListener("keydown", keyboardHandler);    // Attach cleanly
 }
 
 function updateInput() {
@@ -241,8 +287,40 @@ function submitGuess() {
             updateDisplay();
             if (currentStep === chain.length) {
                 document.getElementById("final-count").textContent = guessCount;
-                document.getElementById("win-popup").style.display = "flex";
-            }
+              
+                if (gameMode === "daily") {
+                  const today = new Date().toISOString().split("T")[0];
+                  localStorage.setItem("lastPlayedDate", today);
+              
+                  document.getElementById("win-popup").innerHTML = `
+                    <div class="popup-content">
+                      <h2>🎉 You Win!</h2>
+                      <p>You completed today's daily in ${guessCount} guesses.</p>
+                      <button onclick="startGrindAfterDaily()">Continue to Grind</button>
+                    </div>
+                  `;
+                } else {
+                    grindLevel++;
+                    localStorage.setItem("grindLevel", grindLevel);
+                
+                    document.getElementById("win-popup").innerHTML = `
+                      <div class="popup-content">
+                        <h2>🎉 Level Complete!</h2>
+                        <p>Nice! You solved Grind Level ${grindLevel - 1} in ${guessCount} guesses.</p>
+                        <button onclick="startNextGrindLevel()">Continue to Next Level</button>
+                      </div>
+                    `;
+                    setTimeout(() => {
+                        const nextBtn = document.getElementById("next-level-btn");
+                        if (nextBtn) {
+                          nextBtn.addEventListener("click", startNextGrindLevel);
+                        }
+                      }, 10); // slight delay ensures the element is available
+                      
+                  }
+                
+                  document.getElementById("win-popup").style.display = "flex";
+                }      
         }, 600); // match your flip duration (0.6s)
 
     } else {
@@ -278,3 +356,6 @@ function restartGame() {
     document.getElementById("message").textContent = "";
     updateDisplay();
 }
+
+
+  

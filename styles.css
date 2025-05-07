@@ -155,7 +155,7 @@ h1 {
 }
 
 
-#start-btn {
+.start-btn {
     background-color: #ff5722;
     color: white;
     font-size: 22px;
@@ -169,7 +169,7 @@ h1 {
     font-family: "Cal Sans";
 }
 
-#start-btn:hover {
+.start-btn:hover {
     background-color: #e64a19;
 }
 

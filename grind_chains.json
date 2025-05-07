@@ -1,0 +1,83 @@
+[
+    {
+      "level": 1,
+      "chain": ["train", "track", "pad", "lock", "down", "town", "house"]
+    },
+    {
+      "level": 2,
+      "chain": ["phone", "case", "study", "guide", "dog", "house", "party"]
+    },
+    {
+      "level": 3,
+      "chain": ["time", "zone", "out", "break", "dance", "floor", "tile"]
+    },
+    {
+      "level": 4,
+      "chain": ["snow", "storm", "front", "view", "point", "guard", "station"]
+    },
+    {
+      "level": 5,
+      "chain": ["black", "coffee", "shop", "floor", "tile", "pattern", "recognition"]
+    },
+    {
+      "level": 6,
+      "chain": ["credit", "card", "holder", "hand", "cream", "soda", "can"]
+    },
+    {
+      "level": 7,
+      "chain": ["movie", "star", "player", "piano", "bench", "press", "conference"]
+    },
+    {
+      "level": 8,
+      "chain": ["school", "bus", "stop", "sign", "language", "barrier", "reef"]
+    },
+    {
+      "level": 9,
+      "chain": ["water", "bottle", "cap", "stone", "cold", "case", "file"]
+    },
+    {
+      "level": 10,
+      "chain": ["mail", "box", "cutter", "blade", "runner", "up", "vote"]
+    },
+    {
+        "level": 11,
+        "chain": ["baby", "shower", "curtain", "rod", "iron", "man", "cave"]
+    },
+    {
+        "level": 12,
+        "chain": ["traffic", "light", "switch", "blade", "runner", "game", "night"]
+    },
+    {
+        "level": 13,
+        "chain": ["news", "flash", "drive", "thru", "window", "frame", "rate"]
+    },
+    {
+        "level": 14,
+        "chain": ["hot", "dog", "house", "plant", "pot", "luck", "charm"]
+    },
+    {
+        "level": 15,
+        "chain": ["power", "plant", "based", "salary", "cap", "stone", "wall"]
+    },
+    {
+        "level": 16,
+        "chain": ["apple", "pie", "chart", "paper", "trail", "mix", "tape"]
+    },
+    {
+        "level": 17,
+        "chain": ["social", "media", "coverage", "area", "code", "breaker", "dance"]
+    },
+    {
+        "level": 18,
+        "chain": ["market", "share", "holder", "room", "key", "chain", "reaction"]
+    },
+    {
+        "level": 19,
+        "chain": ["air", "plane", "ticket", "stub", "hub", "cap", "lock"]
+    },
+    {
+        "level": 20,
+        "chain": ["birthday", "cake", "stand", "still", "life", "jacket", "zipper"]
+    }
+]
+  

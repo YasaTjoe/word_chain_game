@@ -19,7 +19,8 @@
             <div class="title_tile">O</div>
           </div>          
         <p class="subtitle">Connect the words. Train your mind!</p>
-        <button id="start-btn" onclick="startGame()">Play Now!</button>
+        <button id="play-btn" class="start-btn">Play</button>
+        <button id="grind-btn" class="start-btn">Grind</button>
     </div>    
     <!-- Transition Popup -->
     <div id="transition-popup" style="display: none;">
@@ -42,7 +43,7 @@
             <div class="tile logo-tile">K</div>
             <div class="tile logo-tile">O</div>
           </div>                  
-        <p>Guess the word chain! Each word connects to the previous one.</p>
+          <p id="subtitle-text" class="subtitle">Guess the word chain! Each word connects to the previous one.</p>
         <div id="game-board"></div>
         <div id="keyboard">
             <div class="row">
