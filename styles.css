@@ -199,7 +199,7 @@ h1 {
     align-items: center;
     justify-content: center;
     animation: jump 0.8s forwards;
-    font-family: "Cascadia Mono", sans-serif; /* 👈 Add this line */
+    font-family: "Cal Sans"; /* 👈 Add this line */
   }
   
   
@@ -306,7 +306,7 @@ h1 {
     background-color: #787c7e;
     border: 2px solid black;
     color: black;
-    font-family: "Cascadia Mono", sans-serif;
+    font-family: "Cal Sans";
     animation: none !important; /* Disable flip/shake */
 }
   
